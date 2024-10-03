@@ -17,14 +17,13 @@ function log_errors() {
 if [[ line_count -ne 0 ]]; then 
     printf "Sending Errors From $filename To Log...\n\n";
     echo -e "\nDate: $current_date\n" >> error.log && cat "$tempfile" >> error.log;
-    printf "Errors Logged.";
+    printf "Errors Logged.\n";
     sleep 1;
-    exit 0;
 else 
     printf "...No Errors Occured In That File.";
     sleep 1; 
-    exit 0;
 fi
+exit 0;
 }
 
 function file_check() {
