@@ -1,0 +1,23 @@
++ read -p 'Pick a file to log the errors of: ' -r filename
++ file_check
++ [[ -f test1.sh ]]
++ printf '\nEntering Log File...\n\n'
++ sleep 1
++ run_file
+++ mktemp
++ tempfile=/tmp/tmp.xutPU5tT20
++ trap 'rm -f "$tempfile"' EXIT
++ bash test1.sh
+++ wc -l
++ line_count=1
+++ date +%F_%T
++ current_date=2024-10-03_15:58:41
++ log_errors
++ [[ line_count -ne 0 ]]
++ printf 'Sending Errors From test1.sh To Log...\n\n'
++ echo -e 'Date: 2024-10-03_15:58:41\n'
++ cat /tmp/tmp.xutPU5tT20
++ printf 'Errors Logged.'
++ sleep 1
++ exit 0
++ rm -f /tmp/tmp.xutPU5tT20

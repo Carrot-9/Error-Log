@@ -1,22 +1,45 @@
 #!/bin/bash
 
-set -e
+read  -p "Pick a file to log the errors of: " -r filename
 
-read -p  "Pick a file to log the errors of: " filename
+function run_file() {
+tempfile=$(mktemp);
+trap 'rm -f "$tempfile"' EXIT
 
+bash "$filename" > /dev/null 2> "$tempfile"
+line_count=$( wc -l < "$tempfile");
 current_date=$(date +%F_%T);
-line_count=$(wc -l);
-exit_status=$?;
 
-function foo() {
-if [[ exit_status -ne 0 ]]; then 
-    (printf "Date: $current_date\n\n") | tee error.log && "$filename" 2> error.log && cat -n error.log; 
-elif (( exit_status != 0 && line_count >= 200 )); then 
-    printf "Reset On: $current_date" > error.log;  
+log_errors;
+}
+
+function log_errors() {
+if [[ line_count -ne 0 ]]; then 
+    printf "Sending Errors From $filename To Log...\n\n";
+    echo -e "\nDate: $current_date\n" >> error.log && cat "$tempfile" >> error.log;
+    printf "Errors Logged.";
+    sleep 1;
+    exit 0;
 else 
-    printf " No Errors Have Occured."; 
+    printf "...No Errors Occured In That File.";
+    sleep 1; 
     exit 0;
 fi
 }
-foo
+
+function file_check() {
+if [[ -f "$filename" ]]; then
+    printf "\nEntering Log File...\n\n"
+    sleep 1;
+    run_file
+else 
+    printf "\nFile Does Not Exist...";
+    exit 1; 
+fi
+}
+file_check
+
+
+
+
 
