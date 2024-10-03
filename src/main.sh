@@ -15,7 +15,7 @@ elif (( exit_status != 0 && line_count >= 200 )); then
     printf "Reset On: $current_date" > error.log;  
 else 
     printf " No Errors Have Occured."; 
-
+    exit 0;
 fi
 }
 foo
